@@ -11,6 +11,7 @@
 
 struct ActiveBlock {
   Coord pos = Coord(0, 0);
+  int rotation = 0;
   int matrix[4][4] = {{0, 0, 0, 0},
                       {0, 0, 0, 0},
                       {0, 0, 0, 0},
@@ -89,6 +90,40 @@ struct ActiveBlock {
     std::cout << "\n";
   }
 
+  void rotate_matrix() {
+    for (int i = 0; i < size / 2; i++) {
+      for (int j = i; j < size - i - 1; j++) {
+        int k = size - i - 1;
+        int l = size - j - 1;
+        int temp = matrix[i][j];
+        matrix[i][j] = matrix[l][i];
+        matrix[l][i] = matrix[k][l];
+        matrix[k][l] = matrix[j][k];
+        matrix[j][k] = temp;
+      }
+    }
+  }
+
+  void rotate() {
+    if (rotations == 4) {
+      rotation += 1;
+      if (rotation == 4) { rotation = 0; }
+      rotate_matrix();
+    }
+    else if (rotations == 2) {
+      if (rotation == 0) {
+        rotation = 1;
+        for (int i = 0; i < 3; i++) {
+          rotate_matrix();
+        }
+      }
+      else {
+        rotation = 0;
+        rotate_matrix();
+      }
+    }
+  }
+
 };
 
 struct PassiveBlock {
@@ -126,13 +161,29 @@ int main(int argc, char** argv) {
   ActiveBlock t('t');
   ActiveBlock s('s');
   ActiveBlock z('z');
+
+  o.write();
+  o.rotate();
   o.write();
   i.write();
+  i.rotate();
+  i.write();
+  j.write();
+  j.rotate();
   j.write();
   l.write();
+  l.rotate();
+  l.write();
+  t.write();
+  t.rotate();
   t.write();
   s.write();
+  s.rotate();
+  s.write();
   z.write();
+  z.rotate();
+  z.write();
+
   // End Test
 
   while(!engine.get_exit()) {
