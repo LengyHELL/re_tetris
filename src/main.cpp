@@ -9,8 +9,8 @@
 #include "engine/TextBox.hpp"
 #include "engine/InputBox.hpp"
 
-struct ActiveBlock {
-  Coord pos = Coord(0, 0);
+struct Block {
+  Coord pos = Coord(0, 3);
   int rotation = 0;
   int matrix[4][4] = {{0, 0, 0, 0},
                       {0, 0, 0, 0},
@@ -18,8 +18,9 @@ struct ActiveBlock {
                       {0, 0, 0, 0}};
   int rotations = 0;
   int size = 0;
+  SDL_Color color = {128, 0, 0, 255};
 
-  ActiveBlock(char type) {
+  Block(const char& type) {
     switch(type) { //o i j l t s z
       case 'o':
         matrix[1][1] = 1;
@@ -80,16 +81,6 @@ struct ActiveBlock {
     }
   }
 
-  void write() {
-    for(int i = 0; i < size; i++) {
-      for(int j = 0; j < size; j++) {
-        std::cout << matrix[i][j] << " ";
-      }
-      std::cout << "\n";
-    }
-    std::cout << "\n";
-  }
-
   void rotate_matrix() {
     for (int i = 0; i < size / 2; i++) {
       for (int j = i; j < size - i - 1; j++) {
@@ -126,24 +117,65 @@ struct ActiveBlock {
 
 };
 
-struct PassiveBlock {
-
-};
-
 class Board { //10x20
+  Coord pos = Coord(50, 50);
+  int matrix[24][10];
+  SDL_Color color_matrix[24][10];
+  int block_size = 20;
 
+public:
+  Board() {
+    SDL_Color blank = {255, 255, 255, 255};
+    for (int i = 0; i < 24; i++) {
+      for (int j = 0; j < 10; j++) {
+        matrix[i][j] = 0;
+        color_matrix[i][j] = blank;
+      }
+    }
+  }
+
+  void set_block(const Block& block) {
+    for (int i = 0; i < block.size; i++) {
+      for (int j = 0; j < block.size; j++) {
+        if (block.matrix[i][j] == 1) {
+          matrix[int(block.pos.y) + i][int(block.pos.x) + j] = block.matrix[i][j];
+          color_matrix[int(block.pos.y) + i][int(block.pos.x) + j] = block.color;
+        }
+      }
+    }
+  }
+
+  void draw(const Engine& engine) const {
+    for (int i = 0; i < 20; i++) {
+      for (int j = 0; j < 10; j++) {
+        Rect draw_rect(pos.x + (j * block_size), pos.y + (i * block_size), block_size, block_size);
+        engine.draw_image("img/no_part.png", draw_rect, 0, color_matrix[i + 4][j]);
+      }
+    }
+  }
+
+  void draw_block(const Engine& engine, const Block& block) const {
+    for (int i = 0; i < block.size; i++) {
+      for (int j = 0; j < block.size; j++) {
+        int x = j + int(block.pos.x);
+        int y = (i - 4) + int(block.pos.y);
+
+        if ((y >= 0) && (block.matrix[i][j] == 1)) {
+          Rect draw_rect(pos.x + (x * block_size), pos.y + (y * block_size), block_size, block_size);
+          engine.draw_image("img/no_part.png", draw_rect, 0, block.color);
+        }
+      }
+    }
+  }
 };
 
 int main(int argc, char** argv) {
   // Initializing engine
   srand(time(NULL));
 
-  Engine engine(640, 480, "csuriz.exxe", false);
+  Engine engine(640, 480, "Re:Tetris", false);
   engine.load_font("lhll.ttf");
-  engine.load_image("img/bottom_tube.png");
-  engine.load_image("img/top_tube.png");
-  engine.load_image("img/background.png");
-  engine.load_image("img/bird.png");
+  engine.load_image("img/no_part.png");
 
   engine.load_image("img/basic_style.png");
 
@@ -154,40 +186,16 @@ int main(int argc, char** argv) {
   //...
 
   // Test
-  ActiveBlock o('o');
-  ActiveBlock i('i');
-  ActiveBlock j('j');
-  ActiveBlock l('l');
-  ActiveBlock t('t');
-  ActiveBlock s('s');
-  ActiveBlock z('z');
-
-  o.write();
-  o.rotate();
-  o.write();
-  i.write();
-  i.rotate();
-  i.write();
-  j.write();
-  j.rotate();
-  j.write();
-  l.write();
-  l.rotate();
-  l.write();
-  t.write();
-  t.rotate();
-  t.write();
-  s.write();
-  s.rotate();
-  s.write();
-  z.write();
-  z.rotate();
-  z.write();
-
+  //...
+  Board board;
+  Block block('t');
   // End Test
 
   while(!engine.get_exit()) {
     engine.update_inputs();
+
+    board.draw(engine);
+    board.draw_block(engine, block);
 
     engine.draw_text(std::to_string(engine.get_fps()) + " fps", Coord(5, 5), {255, 0, 0, 0}, 16);
     engine.render();
