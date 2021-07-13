@@ -24,7 +24,7 @@ class Block {
   }
 
 public:
-  Block() {}
+  Block(const Block& other) { *this = other; }
   Block(const char& type) {
     matrix = new int*[4];
     for (int i = 0; i < 4; i++) {
@@ -118,8 +118,24 @@ public:
   }
 
   void move(const Coord& dir) {
-    if ((dir.x == -1) || (dir.x == 1) || (dir.y == 1)) {
+    if ((dir.x == -1) || (dir.x == 1) || (dir.y == -1) || (dir.y == 1)) {
       pos += dir;
+    }
+  }
+
+  void operator=(const Block& other) {
+    pos = other.pos;
+    rotation = other.rotation;
+    rotations = other.rotations;
+    size = other.size;
+    color = other.color;
+
+    matrix = new int*[4];
+    for (int i = 0; i < 4; i++) {
+      matrix[i] = new int[4];
+      for (int j = 0; j < 4; j++) {
+        matrix[i][j] = other.matrix[i][j];
+      }
     }
   }
 
