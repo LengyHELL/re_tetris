@@ -18,6 +18,21 @@ public:
     }
   }
 
+  bool check_block(const Block& block) {
+    for (int i = 0; i < block.get_size(); i++) {
+      for (int j = 0; j < block.get_size(); j++) {
+
+        if (block.get_matrix()[i][j] == 1) {
+          if ((int(block.get_pos().y) + i) >= 24) { return false; }
+          else if ((int(block.get_pos().x) + j) < 0) { return false; }
+          else if ((int(block.get_pos().x) + j) >= 10) { return false; }
+          else if (matrix[int(block.get_pos().y) + i][int(block.get_pos().x) + j] == 1) { return false; }
+        }
+      }
+    }
+    return true;
+  }
+
   void set_block(const Block& block) {
     for (int i = 0; i < block.get_size(); i++) {
       for (int j = 0; j < block.get_size(); j++) {
