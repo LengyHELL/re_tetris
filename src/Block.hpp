@@ -16,6 +16,7 @@ class Block {
 
   Coord animation_pos = pos;
   float rotation_pos = rotation;
+  float animation_threshold = 0.05;
 
   SDL_Color color = {128, 0, 0, 255};
 
@@ -77,17 +78,35 @@ public:
   }
 
   void rotate() {
-    rotation += 1;
-    if (rotation >= rotations) {
-      rotation -= rotations;
+    if (rotations > 0) {
+      rotation += 1;
+      if (rotation >= rotations) {
+        rotation = 0;
+      }
     }
   }
 
   void move(const Coord& dir) { pos += dir; }
 
   void draw(const Engine& engine, const Coord& rel_pos, const int& block_size, const float& duration) {
-    animation_pos += ((pos - animation_pos) / duration) * engine.get_ft();
-    rotation_pos += ((rotation - rotation_pos) / duration) * engine.get_ft();
+    if (Coord(pos - animation_pos).len() < animation_threshold) {
+      animation_pos = pos;
+    }
+    else {
+      animation_pos += ((pos - animation_pos) / duration) * engine.get_ft();
+    }
+
+
+    float rotation_value = rotation - rotation_pos;
+    while ((rotation_value < 0) && (rotations == 4)) { rotation_value += rotations; } //sketchy
+
+    if (abs(rotation_value) < animation_threshold) {
+      rotation_pos = rotation;
+    }
+    else {
+      rotation_pos += (rotation_value / duration) * engine.get_ft();
+    }
+
     float deg = 90 * rotation_pos;
     float deg_rad = (deg / 180) * M_PI;
 

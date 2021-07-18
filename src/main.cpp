@@ -101,7 +101,7 @@ public:
 
   void draw(const Engine& engine) {
     board.draw(engine);
-    active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * board.get_block_size(), board.get_block_size(), step_current / 2);
+    active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * board.get_block_size(), board.get_block_size(), step_current / 3);
   }
 };
 
