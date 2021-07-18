@@ -20,6 +20,10 @@ class Game {
   float step_current = step;
   float step_timer = 0;
 
+  Coord x_movement = Coord(0, 0);
+  Coord y_movement = Coord(0, 0);
+  bool rotation = false;
+
   bool left_lock = true;
   bool right_lock = true;
   bool up_lock = true;
@@ -30,9 +34,9 @@ class Game {
 public:
 
   void update(const Engine& engine) {
-    Coord x_movement(0, 0);
-    Coord y_movement(0, 0);
-    bool rotation = false;
+    x_movement = Coord(0, 0);
+    y_movement = Coord(0, 0);
+    rotation = false;
 
     step_timer += engine.get_ft();
 
@@ -81,11 +85,13 @@ public:
     active_block.move(x_movement);
     if (!board.check_block(active_block)) {
       active_block.move(x_movement * -1);
+      x_movement = Coord(0, 0);
     }
 
     active_block.move(y_movement);
     if (!board.check_block(active_block)) {
       active_block.move(y_movement * -1);
+      y_movement = Coord(0, 0);
       board.set_block(active_block);
       active_block = Block(types[rand() % 7]);
     }
@@ -95,7 +101,7 @@ public:
 
   void draw(const Engine& engine) {
     board.draw(engine);
-    board.draw_block(engine, active_block);
+    active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * board.get_block_size(), board.get_block_size(), step_current / 2);
   }
 };
 
