@@ -177,7 +177,6 @@ public:
       a.update(engine);
       a.draw(engine);
     }
-    std::cerr << animations.size() << "-------\r";
   }
 
   Coord get_pos() const { return pos; }
