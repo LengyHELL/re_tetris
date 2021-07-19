@@ -17,6 +17,12 @@ std::list<std::string> convert(const Engine& engine, std::string text, const uns
       ls = rs + 1;
       rs = text.find_first_of(ws, ls);
     }
+    else if (text[next] == '\n') {
+      rs = next - 1;
+      list.push_back(text.substr(ls, (rs - ls) + 1));
+      ls = rs + 2;
+      rs = text.find_first_of(ws, ls);
+    }
     else if (next == (int)text.size() - 1) {
       list.push_back(text.substr(ls, (next - ls) + 1));
       rs = -1;
