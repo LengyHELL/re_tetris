@@ -17,9 +17,11 @@ class Board {
   int block_size = 20;
   int hidden = 4;
 
+  SDL_Color blank = {255, 255, 255, 255};
+
 public:
   Board() {
-    SDL_Color blank = {255, 255, 255, 255};
+
     for (int i = 0; i < width; i++) {
       matrix.push_back(std::vector<int>(height, 0));
       color_matrix.push_back(std::vector<SDL_Color>(height, blank));
@@ -37,8 +39,29 @@ public:
     return true;
   }
 
+  int check_rows() {
+    int ret = 0;
+
+    for (int j = 0; j < height; j++) {
+      bool remove = true;
+      for (int i = 0; (i < width) && remove; i++) {
+        if (matrix[i][j] == 0) { remove = false; }
+      }
+      if (remove) {
+        ret += 1;
+        for (int i = 0; i < width; i++) {
+          matrix[i].erase(matrix[i].begin() + j);
+          color_matrix[i].erase(color_matrix[i].begin() + j);
+          matrix[i].insert(matrix[i].begin(), 0);
+          color_matrix[i].insert(color_matrix[i].begin(), blank);
+        }
+      }
+    }
+    return ret;
+  }
+
   void set_block(const Block& block) {
-    
+
     for (const auto& p : block.get_parts()) {
       matrix[int(p.x)][int(p.y)] = 1;
       color_matrix[int(p.x)][int(p.y)] = block.get_color();
