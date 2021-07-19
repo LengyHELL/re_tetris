@@ -10,6 +10,7 @@
 #include "engine/InputBox.hpp"
 
 #include "Game.hpp"
+#include <time.h>
 
 int main(int argc, char** argv) {
   // Initializing engine
