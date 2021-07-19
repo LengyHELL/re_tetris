@@ -19,6 +19,7 @@ class Game {
   float step = 500; //ms
   float step_current = step;
   float step_timer = 0;
+  float side_timer = 0;
 
   Coord x_movement = Coord(0, 0);
   Coord y_movement = Coord(0, 0);
@@ -39,16 +40,19 @@ public:
     rotation = false;
 
     step_timer += engine.get_ft();
+    side_timer += engine.get_ft();
 
     if (engine.keyboard_state[SDL_SCANCODE_LEFT] && !left_lock) {
       left_lock = true;
       x_movement += Coord(-1, 0);
+      side_timer = 0;
     }
     else if (!engine.keyboard_state[SDL_SCANCODE_LEFT]) { left_lock = false; }
 
     if (engine.keyboard_state[SDL_SCANCODE_RIGHT] && !right_lock) {
       right_lock = true;
       x_movement += Coord(1, 0);
+      side_timer = 0;
     }
     else if (!engine.keyboard_state[SDL_SCANCODE_RIGHT]) { right_lock = false; }
 
@@ -66,6 +70,12 @@ public:
     else if (!engine.keyboard_state[SDL_SCANCODE_DOWN]) {
       down_lock = false;
       step_current = step;
+    }
+
+    if (side_timer >= step_current) {
+      side_timer = step_current;
+      left_lock = false;
+      right_lock = false;
     }
 
     if (step_timer >= step_current) {

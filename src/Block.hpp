@@ -107,7 +107,7 @@ public:
       rotation_pos += (rotation_value / duration) * engine.get_ft();
     }
 
-    float deg = 90 * rotation_pos;
+    float deg = rotation_pos * 90;
     float deg_rad = (deg / 180) * M_PI;
 
     for (const auto& p : parts) {
