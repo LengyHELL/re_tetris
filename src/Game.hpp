@@ -121,7 +121,7 @@ public:
           over = true;
         }
         else {
-          int clear = board.check_rows();
+          int clear = board.check_rows(engine);
           switch(clear) {
             case 1: score += 40 * level; break;
             case 2: score += 100 * level; break;
