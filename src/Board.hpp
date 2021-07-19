@@ -60,6 +60,15 @@ public:
     return ret;
   }
 
+  bool is_over() {
+    for (int i = 0; i < width; i++) {
+      for (int j = 0; j < hidden; j++) {
+        if (matrix[i][j] == 1) { return true; }
+      }
+    }
+    return false;
+  }
+
   void set_block(const Block& block) {
 
     for (const auto& p : block.get_parts()) {

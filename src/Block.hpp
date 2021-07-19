@@ -9,7 +9,7 @@
 #include <math.h>
 
 class Block {
-  Coord pos = Coord(3, 3);
+  Coord pos = Coord(5, 1);
   int rotation = 0;
   int rotations = 0;
   std::vector<Coord> parts;
