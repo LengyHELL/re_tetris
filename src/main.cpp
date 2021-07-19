@@ -27,6 +27,9 @@ int main(int argc, char** argv) {
   TextButton no("img/basic_style.png", Rect(250, 115, 40, 25), "No", 16, {0, 0, 0, 0});
   bool exit = false;
 
+  std::string info_text = "Left/Right - Left and Right arrows\nBoost - Down arrow\nRotate - Up arrow";
+  TextBox info("img/basic_style.png", Rect(300, 150, 300, 300), info_text, 16, {0, 0, 0, 0});
+
   // Creating game objects
   //...
 
@@ -40,6 +43,7 @@ int main(int argc, char** argv) {
 
     game.update(engine);
     game.draw(engine);
+    info.draw(engine);
 
     if (game.is_over()) {
       yesno.draw(engine);
