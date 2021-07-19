@@ -27,6 +27,7 @@ public:
   }
 
   bool check_block(const Block& block) {
+
     for (const auto& p : block.get_parts()) {
       if (int(p.y) >= height) { return false; }
       else if (int(p.x) < 0) { return false; }
@@ -37,6 +38,7 @@ public:
   }
 
   void set_block(const Block& block) {
+    
     for (const auto& p : block.get_parts()) {
       matrix[int(p.x)][int(p.y)] = 1;
       color_matrix[int(p.x)][int(p.y)] = block.get_color();
