@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
   bool exit = false;
 
   std::string info_text = "Left/Right - Left and Right arrows\nBoost - Down arrow\nRotate - Up arrow";
-  TextBox info("img/basic_style.png", Rect(300, 150, 300, 300), info_text, 16, {0, 0, 0, 0});
+  TextBox info("img/basic_style.png", Rect(300, 150, 300, 100), info_text, 16, {0, 0, 0, 0});
 
   // Creating game objects
   //...
