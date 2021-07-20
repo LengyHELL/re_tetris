@@ -44,6 +44,7 @@ int main(int argc, char** argv) {
   srand(time(NULL));
 
   Engine engine(400, 500, "Re:Tetris", false);
+  engine.set_fps_cap(120);
   engine.load_font("lhll.ttf");
   engine.load_image("img/no_part.png");
   engine.load_image("img/blank.png");
