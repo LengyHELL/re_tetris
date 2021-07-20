@@ -55,13 +55,13 @@ struct BlockAnimation {
   void update(const Engine& engine) {
     if (!over) {
       for (auto& f : forces) {
-        f += Coord(0, 0.001) * scale;
+        f += Coord(0, 0.001) * scale * engine.get_ft();
       }
 
       over = true;
       for (unsigned i = 0; i < dst_parts.size(); i++) {
-        dst_parts[i].x += forces[i].x;
-        dst_parts[i].y += forces[i].y;
+        dst_parts[i].x += forces[i].x * engine.get_ft();
+        dst_parts[i].y += forces[i].y * engine.get_ft();
         Coord dst_coord(dst_parts[i].x, dst_parts[i].y);
         if ((dst_coord >= Coord(0, 0)) && (dst_coord < Coord(engine.get_width(), engine.get_height()))) {
           over = false;
