@@ -16,8 +16,8 @@
  */
 
 class Game {
-  Board board;
-  Block active_block = Block('t');
+  Board board = Board(Coord(0, 0), 20);
+  Block active_block = Block();
 
   float step = 800; //ms
   float step_current = step;
@@ -33,8 +33,6 @@ class Game {
   bool up_lock = true;
   bool down_lock = true;
 
-  char types[7] = {'o', 'i', 'j', 'l', 't', 's', 'z'};
-
   int score = 0;
   int level = 1;
   int clears = 0;
@@ -45,6 +43,10 @@ class Game {
   bool over = false;
 
 public:
+
+  Game(const Engine& engine) {
+    board = Board(Coord(0, engine.get_height() / 10), (engine.get_width() / 2) / 10);
+  }
 
   void update(const Engine& engine) {
     if (!over) {
@@ -116,7 +118,7 @@ public:
         active_block.move(y_movement * -1);
         y_movement = Coord(0, 0);
         board.set_block(active_block);
-        active_block = Block(types[rand() % 7]);
+        active_block = Block();
         if (board.is_over()) {
           over = true;
         }
@@ -142,11 +144,12 @@ public:
   void draw(const Engine& engine) {
     board.draw(engine);
     active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * board.get_block_size(), board.get_block_size(), step_current / 3);
-    engine.draw_text("Score: " + std::to_string(score), Coord(400, 5), {255, 255, 255, 0}, 16);
-    engine.draw_text("Level: " + std::to_string(level), Coord(400, 25), {255, 255, 255, 0}, 16);
   }
 
   bool is_over() const { return over; }
+
+  int get_score() const { return score; }
+  int get_level() const { return level; }
 };
 
 #endif

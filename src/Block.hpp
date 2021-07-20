@@ -9,14 +9,14 @@
 #include <math.h>
 
 class Block {
-  Coord pos = Coord(5, 1);
+  Coord pos = Coord(4, 1);
   int rotation = 0;
   int rotations = 0;
   std::vector<Coord> parts;
 
   Coord animation_pos = pos;
   float rotation_pos = rotation;
-  float animation_threshold = 0.05;
+  float animation_threshold = 0.02;
 
   SDL_Color color = {128, 0, 0, 255};
 
@@ -76,6 +76,10 @@ public:
       break;
     }
   }
+  Block() {
+    char types[7] = {'o', 'i', 'j', 'l', 't', 's', 'z'};
+    *this = Block(types[rand() % 7]);
+  }
 
   void rotate() {
     if (rotations > 0) {
@@ -97,8 +101,8 @@ public:
     }
 
 
-    float rotation_value = rotation - rotation_pos;
-    while ((rotation_value < 0) && (rotations == 4)) { rotation_value += rotations; } //sketchy
+    float rotation_value = float(rotation) - rotation_pos;
+    while ((rotation_value < 0) && (rotations == 4)) { rotation_value += float(rotations); } //sketchy
 
     if (abs(rotation_value) < animation_threshold) {
       rotation_pos = rotation;
@@ -107,14 +111,15 @@ public:
       rotation_pos += (rotation_value / duration) * engine.get_ft();
     }
 
-    float deg = rotation_pos * 90;
-    float deg_rad = (deg / 180) * M_PI;
+    float deg_rad = rotation_pos * (M_PI / 2);
+    float deg = (deg_rad / M_PI) * 180;
 
     for (const auto& p : parts) {
       Coord rotated;
       rotated.x = cos(deg_rad) * p.x - sin(deg_rad) * p.y;
       rotated.y = sin(deg_rad) * p.x + cos(deg_rad) * p.y;
-      Coord draw_pos = rel_pos + (animation_pos + rotated) * block_size;
+      if ((int(deg) % 90) != 0) { rotated *= 0.96; }
+      Coord draw_pos = rel_pos + (animation_pos + rotated) * float(block_size);
 
       Rect draw_rect(draw_pos.x, draw_pos.y, block_size, block_size);
       engine.draw_image("img/no_part.png", draw_rect, deg, color);

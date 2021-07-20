@@ -80,13 +80,13 @@ struct BlockAnimation {
 };
 
 class Board {
-  Coord pos = Coord(50, 50);
+  Coord pos = Coord(0, 0);
   int width = 10;
   int height = 24;
   std::vector<std::vector<int>> matrix;
   std::vector<std::vector<SDL_Color>> color_matrix;
 
-  int block_size = 20;
+  float block_size = 20;
   int hidden = 4;
 
   SDL_Color blank = {255, 255, 255, 255};
@@ -94,7 +94,7 @@ class Board {
   std::vector<BlockAnimation> animations;
 
 public:
-  Board() {
+  Board(const Coord& pos, const float& block_size) : pos(pos), block_size(block_size) {
 
     for (int i = 0; i < width; i++) {
       matrix.push_back(std::vector<int>(height, 0));
@@ -165,6 +165,7 @@ public:
       else { i++; }
     }
 
+    engine.draw_image("img/blank.png", Rect(pos.x, pos.y, width * block_size, (height - hidden) * block_size));
 
     for (unsigned i = 0; i < matrix.size(); i++) {
       for (unsigned j = 0; j < matrix[0].size() - hidden; j++) {

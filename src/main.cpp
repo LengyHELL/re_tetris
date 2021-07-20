@@ -12,13 +12,41 @@
 #include "Game.hpp"
 #include <time.h>
 
+class GameHud {
+  Frame top;
+  Frame bottom;
+  Frame middle;
+  std::string info_text = "Left/Right - Left and Right arrows\nBoost - Down arrow\nRotate - Up arrow";
+  TextBox info;
+
+public:
+  GameHud(const Engine& engine) {
+    top = Frame("img/basic_style.png", Rect(0, 0, engine.get_width(), engine.get_height() / 10));
+    bottom = Frame("img/basic_style.png", Rect(0, engine.get_height() - (engine.get_height() / 10), engine.get_width(), engine.get_height() / 10));
+    middle = Frame("img/basic_style.png", Rect(engine.get_width() / 2, engine.get_height() / 10, engine.get_width() / 2, engine.get_height() - (engine.get_height() / 5)));
+    info = TextBox("img/basic_style.png", Rect(210, 250, 180, 100), info_text, 16, {0, 0, 0, 0});
+  }
+
+  void draw(const Engine& engine, Game& game) {
+    engine.draw_image("img/blank.png", Rect(0, 0, engine.get_width(), engine.get_height()));
+    bottom.draw(engine);
+    game.draw(engine);
+    top.draw(engine);
+    middle.draw(engine);
+    info.draw(engine);
+    engine.draw_text("Score: " + std::to_string(game.get_score()), Coord(210, 60), {0, 0, 0, 0}, 16);
+    engine.draw_text("Level: " + std::to_string(game.get_level()), Coord(210, 80), {0, 0, 0, 0}, 16);
+  }
+};
+
 int main(int argc, char** argv) {
   // Initializing engine
   srand(time(NULL));
 
-  Engine engine(640, 480, "Re:Tetris", false);
+  Engine engine(400, 500, "Re:Tetris", false);
   engine.load_font("lhll.ttf");
   engine.load_image("img/no_part.png");
+  engine.load_image("img/blank.png");
 
   engine.load_image("img/basic_style.png");
 
@@ -28,23 +56,20 @@ int main(int argc, char** argv) {
   TextButton no("img/basic_style.png", Rect(250, 115, 40, 25), "No", 16, {0, 0, 0, 0});
   bool exit = false;
 
-  std::string info_text = "Left/Right - Left and Right arrows\nBoost - Down arrow\nRotate - Up arrow";
-  TextBox info("img/basic_style.png", Rect(300, 150, 300, 100), info_text, 16, {0, 0, 0, 0});
-
   // Creating game objects
   //...
 
   // Test
   //...
-  Game game;
+  Game game(engine);
+  GameHud hud(engine);
   // End Test
 
   while(!engine.get_exit() && !exit) {
     engine.update_inputs();
 
     game.update(engine);
-    game.draw(engine);
-    info.draw(engine);
+    hud.draw(engine, game);
 
     if (game.is_over()) {
       yesno.draw(engine);
@@ -57,7 +82,7 @@ int main(int argc, char** argv) {
       no.update(engine);
 
       if (yes.selected) {
-        game = Game();
+        game = Game(engine);
       }
       else if (no.selected) {
         exit = true;
