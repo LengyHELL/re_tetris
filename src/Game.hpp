@@ -18,6 +18,7 @@
 class Game {
   Board board = Board(Coord(0, 0), 20);
   Block active_block = Block();
+  Block next_block = Block();
 
   float step = 800; //ms
   float step_current = step;
@@ -46,6 +47,7 @@ public:
 
   Game(const Engine& engine) {
     board = Board(Coord(0, engine.get_height() / 10), (engine.get_width() / 2) / 10);
+    active_block.move(Coord(4, 1));
   }
 
   void update(const Engine& engine) {
@@ -118,7 +120,10 @@ public:
         active_block.move(y_movement * -1);
         y_movement = Coord(0, 0);
         board.set_block(active_block);
-        active_block = Block();
+        active_block = next_block;
+        next_block = Block();
+        active_block.move(Coord(4, 1));
+
         if (board.is_over()) {
           over = true;
         }
@@ -144,6 +149,7 @@ public:
   void draw(const Engine& engine) {
     board.draw(engine);
     active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * board.get_block_size(), board.get_block_size(), step_current / 3);
+    next_block.draw(engine, Coord((engine.get_width() / 4) * 3, (engine.get_height() / 4)), board.get_block_size(), 0);
   }
 
   bool is_over() const { return over; }

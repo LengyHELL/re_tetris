@@ -30,9 +30,9 @@ public:
   void draw(const Engine& engine, Game& game) {
     engine.draw_image("img/blank.png", Rect(0, 0, engine.get_width(), engine.get_height()));
     bottom.draw(engine);
+    middle.draw(engine);
     game.draw(engine);
     top.draw(engine);
-    middle.draw(engine);
     info.draw(engine);
     engine.draw_text("Score: " + std::to_string(game.get_score()), Coord(210, 60), {0, 0, 0, 0}, 16);
     engine.draw_text("Level: " + std::to_string(game.get_level()), Coord(210, 80), {0, 0, 0, 0}, 16);
@@ -52,9 +52,10 @@ int main(int argc, char** argv) {
   engine.load_image("img/basic_style.png");
 
   // Creating menu elements
-  Frame yesno("img/basic_style.png", Rect(150, 75, 150, 75));
-  TextButton yes("img/basic_style.png", Rect(160, 115, 40, 25), "Yes", 16, {0, 0, 0, 0});
-  TextButton no("img/basic_style.png", Rect(250, 115, 40, 25), "No", 16, {0, 0, 0, 0});
+  Rect yn_rect(engine.get_width() / 2 - (150 / 2), 150, 150, 75);
+  Frame yesno("img/basic_style.png", yn_rect);
+  TextButton yes("img/basic_style.png", Rect(yn_rect.x + 10, yn_rect.y + yn_rect.h - (25 + 10), 40, 25), "Yes", 16, {0, 0, 0, 0});
+  TextButton no("img/basic_style.png", Rect(yn_rect.x + yn_rect.w - (40 + 10), yn_rect.y + yn_rect.h - (25 + 10), 40, 25), "No", 16, {0, 0, 0, 0});
   bool exit = false;
 
   // Creating game objects
@@ -76,7 +77,7 @@ int main(int argc, char** argv) {
       yesno.draw(engine);
       yes.draw(engine);
       no.draw(engine);
-      engine.draw_text("Restart?", Coord(180, 85), {0, 0, 0, 0}, 16);
+      engine.draw_text("Restart?", Coord(yn_rect.x + 45, yn_rect.y + 10), {0, 0, 0, 0}, 16);
 
       yesno.update(engine);
       yes.update(engine);
