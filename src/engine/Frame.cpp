@@ -16,7 +16,7 @@ Frame::Frame(const std::string& style, const Rect& body, const Coord& cut_size)
 
 void Frame::draw(const Engine& engine) {
   Rect a_cut(8 * cut_size.x, 0, cut_size.x, cut_size.y);
-  engine.draw_image(style, body, 0, {255, 255, 255, 255}, a_cut);
+  engine.draw_image(style, Rect(body.x + cut_size.x, body.y + cut_size.y, body.w - (cut_size.x * 2), body.h - (cut_size.y * 2)), 0, {255, 255, 255, 255}, a_cut);
 
   unsigned it = 0;
   for (const auto& c : style_cut) {
