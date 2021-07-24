@@ -48,12 +48,28 @@ class Game {
   bool over = false;
   std::vector<BreakAnimation> animations;
 
+  //hud elements
+  Frame top;
+  Frame bottom;
+  Frame middle;
+  Frame next;
+  std::string info_text = "Left/Right - Left and Right arrows\nBoost - Down arrow\nRotate - Up arrow";
+  TextBox info;
+
 public:
 
   Game(const Engine& engine) {
     board = Board(Coord(0, engine.get_height() / 10));
     active_block.move(Coord(4, 1));
     block_size = (engine.get_width() / 2) / 10;
+
+    //initializing hud
+    top = Frame("img/basic_style.png", Rect(0, 0, engine.get_width(), engine.get_height() / 10));
+    bottom = Frame("img/basic_style.png", Rect(0, engine.get_height() - (engine.get_height() / 10), engine.get_width(), engine.get_height() / 10));
+    middle = Frame("img/basic_style.png", Rect(engine.get_width() / 2, engine.get_height() / 10, engine.get_width() / 2, engine.get_height() - (engine.get_height() / 5)));
+    info = TextBox("img/basic_style.png", Rect(210, 250, 180, 100), info_text, 16, {0, 0, 0, 0});
+    info.update(engine);
+    //Coord((engine.get_width() / 4) * 3, (engine.get_height() / 4))
   }
 
   void update(const Engine& engine) {
@@ -150,6 +166,8 @@ public:
         }
       }
 
+      active_block.update(engine, step_current / 3);
+
       unsigned temp_size = animations.size();
       unsigned i = 0;
       while (i < temp_size) {
@@ -157,20 +175,29 @@ public:
           animations.erase(animations.begin() + i);
           temp_size -= 1;
         }
-        else { i++; }
+        else {
+          animations[i].update(engine);
+          i++;
+        }
       }
     }
   }
 
-  void draw(const Engine& engine) {
-    board.draw(engine, style, block_size);
-    active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * block_size, style, block_size, step_current / 3);
-    next_block.draw(engine, Coord((engine.get_width() / 4) * 3, (engine.get_height() / 4)), style, block_size, 0);
+  void draw(const Engine& engine) const {
+    engine.draw_image("img/blank.png", Rect(0, 0, engine.get_width(), engine.get_height()));
+    bottom.draw(engine);
+    middle.draw(engine);
 
-    for (auto& a : animations) {
-      a.update(engine);
-      a.draw(engine);
-    }
+    board.draw(engine, style, block_size);
+    active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * block_size, style, block_size);
+    next_block.draw(engine, Coord((engine.get_width() / 4) * 3, (engine.get_height() / 4)), style, block_size);
+
+    for (auto& a : animations) { a.draw(engine); }
+
+    top.draw(engine);
+    info.draw(engine);
+    engine.draw_text("Score: " + std::to_string(get_score()), Coord(210, 60), {0, 0, 0, 0}, 16);
+    engine.draw_text("Level: " + std::to_string(get_level()), Coord(210, 80), {0, 0, 0, 0}, 16);
   }
 
   bool is_over() const { return over; }
