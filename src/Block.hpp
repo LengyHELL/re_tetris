@@ -92,7 +92,7 @@ public:
 
   void move(const Coord& dir) { pos += dir; }
 
-  void draw(const Engine& engine, const Coord& rel_pos, const int& block_size, const float& duration) {
+  void draw(const Engine& engine, const Coord& rel_pos, const std::string& style, const int& block_size, const float& duration) {
     if (Coord(pos - animation_pos).len() < animation_threshold) {
       animation_pos = pos;
     }
@@ -122,7 +122,7 @@ public:
       Coord draw_pos = rel_pos + (animation_pos + rotated) * float(block_size);
 
       Rect draw_rect(draw_pos.x, draw_pos.y, block_size, block_size);
-      engine.draw_image("img/no_part.png", draw_rect, deg, color);
+      engine.draw_image(style, draw_rect, deg, color);
     }
   }
 

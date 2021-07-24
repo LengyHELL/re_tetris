@@ -3,6 +3,7 @@
 
 #include "Block.hpp"
 #include "Board.hpp"
+#include "Animation.hpp"
 
 /*
   800 ms initial
@@ -16,9 +17,12 @@
  */
 
 class Game {
-  Board board = Board(Coord(0, 0), 20);
+  Board board = Board(Coord(0, 0));
   Block active_block = Block();
   Block next_block = Block();
+
+  float block_size = 20;
+  std::string style = "img/no_part.png";
 
   float step = 800; //ms
   float step_current = step;
@@ -42,12 +46,14 @@ class Game {
   float step_decrease = 85;
 
   bool over = false;
+  std::vector<BreakAnimation> animations;
 
 public:
 
   Game(const Engine& engine) {
-    board = Board(Coord(0, engine.get_height() / 10), (engine.get_width() / 2) / 10);
+    board = Board(Coord(0, engine.get_height() / 10));
     active_block.move(Coord(4, 1));
+    block_size = (engine.get_width() / 2) / 10;
   }
 
   void update(const Engine& engine) {
@@ -128,7 +134,7 @@ public:
           over = true;
         }
         else {
-          int clear = board.check_rows(engine);
+          int clear = board.update_rows(engine, animations, style, block_size);
           switch(clear) {
             case 1: score += 40 * level; break;
             case 2: score += 100 * level; break;
@@ -143,13 +149,28 @@ public:
           }
         }
       }
+
+      unsigned temp_size = animations.size();
+      unsigned i = 0;
+      while (i < temp_size) {
+        if (animations[i].is_over()) {
+          animations.erase(animations.begin() + i);
+          temp_size -= 1;
+        }
+        else { i++; }
+      }
     }
   }
 
   void draw(const Engine& engine) {
-    board.draw(engine);
-    active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * board.get_block_size(), board.get_block_size(), step_current / 3);
-    next_block.draw(engine, Coord((engine.get_width() / 4) * 3, (engine.get_height() / 4)), board.get_block_size(), 0);
+    board.draw(engine, style, block_size);
+    active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * block_size, style, block_size, step_current / 3);
+    next_block.draw(engine, Coord((engine.get_width() / 4) * 3, (engine.get_height() / 4)), style, block_size, 0);
+
+    for (auto& a : animations) {
+      a.update(engine);
+      a.draw(engine);
+    }
   }
 
   bool is_over() const { return over; }

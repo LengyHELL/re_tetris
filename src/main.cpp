@@ -16,6 +16,7 @@ class GameHud {
   Frame top;
   Frame bottom;
   Frame middle;
+  Frame next;
   std::string info_text = "Left/Right - Left and Right arrows\nBoost - Down arrow\nRotate - Up arrow";
   TextBox info;
 
@@ -25,6 +26,7 @@ public:
     bottom = Frame("img/basic_style.png", Rect(0, engine.get_height() - (engine.get_height() / 10), engine.get_width(), engine.get_height() / 10));
     middle = Frame("img/basic_style.png", Rect(engine.get_width() / 2, engine.get_height() / 10, engine.get_width() / 2, engine.get_height() - (engine.get_height() / 5)));
     info = TextBox("img/basic_style.png", Rect(210, 250, 180, 100), info_text, 16, {0, 0, 0, 0});
+    //Coord((engine.get_width() / 4) * 3, (engine.get_height() / 4))
   }
 
   void draw(const Engine& engine, Game& game) {
