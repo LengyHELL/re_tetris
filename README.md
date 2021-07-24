@@ -1,4 +1,4 @@
 ## Tetris remake
 
-![gameplay](images/gameplay2.png)
-![gameplay](images/gameplay3.png)
+![gameplay](images/gameplay4.png)
+![gameplay](images/gameplay5.png)
