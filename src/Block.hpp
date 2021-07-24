@@ -92,7 +92,7 @@ public:
 
   void move(const Coord& dir) { pos += dir; }
 
-  void draw(const Engine& engine, const Coord& rel_pos, const std::string& style, const int& block_size, const float& duration) {
+  void update(const Engine& engine, const float& duration) {
     if (Coord(pos - animation_pos).len() < animation_threshold) {
       animation_pos = pos;
     }
@@ -110,7 +110,9 @@ public:
     else {
       rotation_pos += (rotation_value / duration) * engine.get_ft();
     }
+  }
 
+  void draw(const Engine& engine, const Coord& rel_pos, const std::string& style, const int& block_size) const {
     float deg_rad = rotation_pos * (M_PI / 2);
     float deg = (deg_rad / M_PI) * 180;
 
