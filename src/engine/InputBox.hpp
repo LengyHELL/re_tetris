@@ -22,6 +22,13 @@ class InputBox {
 
   int window_pos = 0;
 
+  float padding = 0;
+  Rect t_rect = Rect(0, 0, 0, 0);
+  float window_size = 0;
+  float cursor_pos = 0;
+  float selection_pos = 0;
+  float selection_size = 0;
+
 public:
   // variables
   bool mouse_hover = false;
@@ -37,7 +44,7 @@ public:
   ~InputBox() {}
 
   //functions
-  void draw(const Engine& engine);
+  void draw(const Engine& engine) const;
   void update(Engine& engine);
 };
 
