@@ -18,7 +18,7 @@ class Block {
   float rotation_pos = rotation;
   float animation_threshold = 0.02;
 
-  SDL_Color color = {128, 0, 0, 255};
+  SDL_Color color = {0, 0, 0, 255};
 
 public:
   Block(const char& type) {
@@ -31,6 +31,9 @@ public:
         parts.push_back(Coord(1, 0));
         parts.push_back(Coord(1, 1));
         rotations = 0;
+        color.r = 192;
+        color.g = 192;
+        color.b = 0;
       break;
       case 'i':
         parts.push_back(Coord(-2, 0));
@@ -38,6 +41,9 @@ public:
         parts.push_back(Coord(0, 0));
         parts.push_back(Coord(1, 0));
         rotations = 2;
+        color.r = 0;
+        color.g = 192;
+        color.b = 192;
       break;
       case 'j':
         parts.push_back(Coord(-1, 0));
@@ -45,6 +51,9 @@ public:
         parts.push_back(Coord(1, 0));
         parts.push_back(Coord(1, 1));
         rotations = 4;
+        color.r = 0;
+        color.g = 0;
+        color.b = 192;
       break;
       case 'l':
         parts.push_back(Coord(-1, 0));
@@ -52,6 +61,9 @@ public:
         parts.push_back(Coord(1, 0));
         parts.push_back(Coord(-1, 1));
         rotations = 4;
+        color.r = 192;
+        color.g = 96;
+        color.b = 0;
       break;
       case 't':
         parts.push_back(Coord(-1, 0));
@@ -59,6 +71,9 @@ public:
         parts.push_back(Coord(1, 0));
         parts.push_back(Coord(0, 1));
         rotations = 4;
+        color.r = 192;
+        color.g = 0;
+        color.b = 192;
       break;
       case 's':
         parts.push_back(Coord(0, 0));
@@ -66,6 +81,9 @@ public:
         parts.push_back(Coord(-1, 1));
         parts.push_back(Coord(0, 1));
         rotations = 2;
+        color.r = 0;
+        color.g = 192;
+        color.b = 0;
       break;
       case 'z':
         parts.push_back(Coord(-1, 0));
@@ -73,6 +91,9 @@ public:
         parts.push_back(Coord(0, 1));
         parts.push_back(Coord(1, 1));
         rotations = 2;
+        color.r = 192;
+        color.g = 0;
+        color.b = 0;
       break;
     }
   }
