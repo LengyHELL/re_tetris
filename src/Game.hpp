@@ -16,10 +16,35 @@
   levelup after 10 lines
  */
 
+Coord get_next_pos(const Block& block, const Rect& rect, const float& block_size) {
+  Coord min(0, 0);
+  Coord max(0, 0);
+  bool first = true;
+  for (const auto& p : block.get_parts()) {
+    if (first) {
+      first = false;
+      max.x = min.x = p.x;
+      max.y = min.y = p.y;
+    }
+    else {
+      if (p.x > max.x) { max.x = p.x; }
+      if (p.y > max.y) { max.y = p.y; }
+      if (p.x < min.x) { min.x = p.x; }
+      if (p.y < min.y) { min.y = p.y; }
+    }
+  }
+  Coord ret = (max - min) + 1;
+  ret = (Coord(rect.x, rect.y) + (Coord(rect.w, rect.h) / 2)) - ((ret * block_size) / 2);
+  ret -= (min * block_size);
+  return ret;
+}
+
 class Game {
   Board board = Board(Coord(0, 0));
   Block active_block = Block();
   Block next_block = Block();
+  Coord next_pos = Coord(0, 0);
+  Rect next_rect = Rect(0, 0, 0, 0);
 
   float block_size = 20;
   std::string style = "img/no_part.png";
@@ -69,6 +94,14 @@ public:
     middle = Frame("img/basic_style.png", Rect(engine.get_width() / 2, engine.get_height() / 10, engine.get_width() / 2, engine.get_height() - (engine.get_height() / 5)));
     info = TextBox("img/basic_style.png", Rect(210, 250, 180, 100), info_text, 16, {0, 0, 0, 0});
     info.update(engine);
+
+    next_rect.x = ((engine.get_width() / 4) * 3) - ((5 * block_size) / 2);
+    next_rect.y = ((engine.get_height() / 6) * 2) - ((5 * block_size) / 2);
+    next_rect.w = block_size * 5;
+    next_rect.h = block_size * 5;
+    next = Frame("img/basic_style.png", next_rect);
+
+    next_pos = get_next_pos(next_block, next_rect, block_size);
     //Coord((engine.get_width() / 4) * 3, (engine.get_height() / 4))
   }
 
@@ -145,6 +178,7 @@ public:
         active_block = next_block;
         next_block = Block();
         active_block.move(Coord(4, 1));
+        next_pos = get_next_pos(next_block, next_rect, block_size);
 
         if (board.is_over()) {
           over = true;
@@ -187,10 +221,11 @@ public:
     engine.draw_image("img/blank.png", Rect(0, 0, engine.get_width(), engine.get_height()));
     bottom.draw(engine);
     middle.draw(engine);
+    next.draw(engine);
 
     board.draw(engine, style, block_size);
     active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * block_size, style, block_size);
-    next_block.draw(engine, Coord((engine.get_width() / 4) * 3, (engine.get_height() / 4)), style, block_size);
+    next_block.draw(engine, next_pos, style, block_size);
 
     for (auto& a : animations) { a.draw(engine); }
 
