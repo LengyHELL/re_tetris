@@ -34,7 +34,7 @@ public:
   ~ImageButton() {}
 
   //functions
-  void draw(const Engine& engine);
+  void draw(const Engine& engine) const;
   void update(const Engine& engine);
 };
 

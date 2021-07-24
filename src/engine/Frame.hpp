@@ -25,7 +25,7 @@ public:
   ~Frame() {}
 
   //functions
-  void draw(const Engine& engine);
+  void draw(const Engine& engine) const;
   void update(const Engine& engine);
 
   const std::string& get_style() const { return style; }

@@ -39,13 +39,11 @@ TextBox::TextBox(const std::string& style, const Rect& body, const std::string& 
   : text_box_frame(Frame(style, body, cut_size)), body(body), text(text), text_size(text_size),
   text_color(text_color) {}
 
-void TextBox::draw(const Engine& engine) {
+void TextBox::draw(const Engine& engine) const {
   const Coord cut_size = text_box_frame.get_cut_size();
   const Rect body = text_box_frame.get_body();
 
   text_box_frame.draw(engine);
-
-  lines = convert(engine, text, text_size, body.w - 10);
 
   int it = 0;
   int padding = (int)(cut_size.len() * 1.5);
@@ -59,4 +57,5 @@ void TextBox::draw(const Engine& engine) {
 void TextBox::update(const Engine& engine) {
   text_box_frame.update(engine);
   mouse_hover = text_box_frame.mouse_hover;
+  lines = convert(engine, text, text_size, body.w - 10);
 }

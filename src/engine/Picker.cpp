@@ -25,7 +25,7 @@ Picker::Picker(const std::string& style, const Rect& body, const unsigned& text_
     );
   }
 
-void Picker::draw(const Engine& engine) {
+void Picker::draw(const Engine& engine) const {
   picker_frame.draw(engine);
   up.draw(engine);
   down.draw(engine);

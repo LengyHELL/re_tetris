@@ -19,7 +19,7 @@ class InputBox {
   bool click_lock = true;
 
   int selection = 0;
-  
+
   int window_pos = 0;
 
 public:

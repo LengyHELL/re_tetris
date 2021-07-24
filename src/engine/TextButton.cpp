@@ -5,7 +5,7 @@ TextButton::TextButton(const std::string& style, const Rect& body, const std::st
   : button_frame(Frame(style, body, cut_size)), body(body), text(text), text_size(text_size),
   text_color(text_color), on_mouse_down(on_mouse_down) {}
 
-void TextButton::draw(const Engine& engine) {
+void TextButton::draw(const Engine& engine) const {
   const Coord cut_size = button_frame.get_cut_size();
   const Rect body = button_frame.get_body();
   Rect a_cut(0, 0, cut_size.x, cut_size.y);
