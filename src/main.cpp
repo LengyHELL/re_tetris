@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
   engine.load_font("lhll.ttf");
   engine.load_image("img/no_part.png");
   engine.load_image("img/blank.png");
+  engine.load_image("img/shadow.png");
 
   engine.load_image("img/basic_style.png");
 
@@ -29,6 +30,7 @@ int main(int argc, char** argv) {
   Frame yesno("img/basic_style.png", yn_rect);
   TextButton yes("img/basic_style.png", Rect(yn_rect.x + 10, yn_rect.y + yn_rect.h - (25 + 10), 40, 25), "Yes", 16, {0, 0, 0, 0});
   TextButton no("img/basic_style.png", Rect(yn_rect.x + yn_rect.w - (40 + 10), yn_rect.y + yn_rect.h - (25 + 10), 40, 25), "No", 16, {0, 0, 0, 0});
+  TextButton start("img/basic_style.png", Rect(((engine.get_width() / 4) * 3) - 25, (engine.get_width() / 10) * 9, 50, 25), "Start", 16, {0, 0, 0, 0});
   bool exit = false;
 
   // Creating game objects
@@ -42,8 +44,15 @@ int main(int argc, char** argv) {
   while(!engine.get_exit() && !exit) {
     engine.update_inputs();
 
-    game.update(engine);
+    if (start.selected) {
+      game.update(engine);
+    }
     game.draw(engine);
+
+    if (!start.selected) {
+      start.draw(engine);
+      start.update(engine);
+    }
 
     if (game.is_over()) {
       yesno.draw(engine);
