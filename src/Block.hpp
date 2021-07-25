@@ -20,6 +20,27 @@ class Block {
 
   SDL_Color color = {0, 0, 0, 255};
 
+  static void insert_shadow(Rect shadow, std::vector<Rect>& shadows) {
+    float ls = shadow.x;
+    float rs = shadow.x + shadow.w;
+    for (const auto& s : shadows) {
+      float s_ls = s.x;
+      float s_rs = s.x + s.w;
+
+      if ((s_ls <= ls) && (ls <= s_rs)) {
+        ls = s_rs;
+      }
+      if ((s_ls <= rs) && (rs <= s_rs)) {
+        rs = s_ls;
+      }
+    }
+    ls = round(ls);
+    rs = round(rs);
+    shadow.x = ls;
+    shadow.w = rs - ls;
+    shadows.push_back(shadow);
+  }
+
 public:
   Block(const char& type) {
     parts.clear();
@@ -133,10 +154,12 @@ public:
     }
   }
 
-  void draw(const Engine& engine, const Coord& rel_pos, const std::string& style, const int& block_size) const {
+  void draw(const Engine& engine, const Coord& rel_pos, const std::string& style, const int& block_size, const bool& shadow = true) const {
     float deg_rad = rotation_pos * (M_PI / 2);
     float deg = (deg_rad / M_PI) * 180;
 
+    std::vector<Rect> shadows;
+    std::vector<Rect> cubes;
     for (const auto& p : parts) {
       Coord rotated;
       rotated.x = cos(deg_rad) * p.x - sin(deg_rad) * p.y;
@@ -145,7 +168,19 @@ public:
       Coord draw_pos = rel_pos + (animation_pos + rotated) * float(block_size);
 
       Rect draw_rect(draw_pos.x, draw_pos.y, block_size, block_size);
-      engine.draw_image(style, draw_rect, deg, color);
+      cubes.push_back(draw_rect);
+
+      if (shadow) {
+        Rect shadow_rect(draw_pos.x, draw_pos.y + (block_size / 2), block_size, engine.get_height() - draw_pos.y);
+        insert_shadow(shadow_rect, shadows);
+      }
+    }
+
+    for (const auto& s : shadows) {
+      engine.draw_image("img/shadow.png", s, 0, {255, 255, 255, 100});
+    }
+    for (const auto& c : cubes) {
+      engine.draw_image(style, c, deg, color);
     }
   }
 
@@ -166,6 +201,11 @@ public:
   }
 
   SDL_Color get_color() const { return color; }
+
+  void set_pos(const Coord& new_pos) {
+    pos = new_pos;
+    animation_pos = new_pos;
+  }
 };
 
 #endif
