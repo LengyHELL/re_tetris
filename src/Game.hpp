@@ -85,7 +85,7 @@ public:
 
   Game(const Engine& engine) {
     board = Board(Coord(0, engine.get_height() / 10));
-    active_block.move(Coord(4, 1));
+    active_block.set_pos(Coord(4, 1));
     block_size = (engine.get_width() / 2) / 10;
 
     //initializing hud
@@ -177,7 +177,7 @@ public:
         board.set_block(active_block);
         active_block = next_block;
         next_block = Block();
-        active_block.move(Coord(4, 1));
+        active_block.set_pos(Coord(4, 1));
         next_pos = get_next_pos(next_block, next_rect, block_size);
 
         if (board.is_over()) {
@@ -219,13 +219,13 @@ public:
 
   void draw(const Engine& engine) const {
     engine.draw_image("img/blank.png", Rect(0, 0, engine.get_width(), engine.get_height()));
-    bottom.draw(engine);
     middle.draw(engine);
     next.draw(engine);
 
     board.draw(engine, style, block_size);
     active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * block_size, style, block_size);
-    next_block.draw(engine, next_pos, style, block_size);
+    next_block.draw(engine, next_pos, style, block_size, false);
+    bottom.draw(engine);
 
     for (auto& a : animations) { a.draw(engine); }
 
