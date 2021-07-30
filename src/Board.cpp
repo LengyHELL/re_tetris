@@ -19,7 +19,7 @@ bool Board::check_block(const Block& block) const {
   return true;
 }
 
-int Board::update_rows(const Engine& engine, std::vector<BreakAnimation>& animations, const std::string& style, const float& block_size) {
+int Board::update_rows(const Engine& engine, std::vector<BreakAnimation>& animations, const std::string& style, const float& block_size, const bool& get_animations) {
   int ret = 0;
 
   for (int j = 0; j < height; j++) {
@@ -30,7 +30,9 @@ int Board::update_rows(const Engine& engine, std::vector<BreakAnimation>& animat
     if (remove) {
       ret += 1;
       for (int i = 0; i < width; i++) {
-        animations.push_back(BreakAnimation(engine, style, Coord(pos.x + (i * block_size), pos.y + ((j - hidden) * block_size)), block_size, color_matrix[i][j]));
+        if (get_animations) {
+          animations.push_back(BreakAnimation(engine, style, Coord(pos.x + (i * block_size), pos.y + ((j - hidden) * block_size)), block_size, color_matrix[i][j]));
+        }
         matrix[i].erase(matrix[i].begin() + j);
         color_matrix[i].erase(color_matrix[i].begin() + j);
         matrix[i].insert(matrix[i].begin(), 0);

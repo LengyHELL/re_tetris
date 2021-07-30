@@ -11,13 +11,17 @@
 
 #include "Game.hpp"
 #include <time.h>
+#include "Config.hpp"
 
 int main(int argc, char** argv) {
   // Initializing engine
   srand(time(NULL));
 
-  Engine engine(400, 500, "Re:Tetris", false);
-  engine.set_fps_cap(120);
+  Config cfg;
+  cfg.load("config.dat");
+
+  Engine engine(cfg.width, cfg.height, "Re:Tetris", false);
+  engine.set_fps_cap(cfg.fps_cap);
   engine.load_font("lhll.ttf");
   engine.load_image("img/no_part.png");
   engine.load_image("img/blank.png");
@@ -45,9 +49,9 @@ int main(int argc, char** argv) {
     engine.update_inputs();
 
     if (start.selected) {
-      game.update(engine);
+      game.update(engine, cfg);
     }
-    game.draw(engine);
+    game.draw(engine, cfg);
 
     if (!start.selected) {
       start.draw(engine);

@@ -134,8 +134,11 @@ void Block::update(const Engine& engine, const float& duration) {
   }
 }
 
-void Block::draw(const Engine& engine, const Coord& rel_pos, const std::string& style, const int& block_size, const bool& shadow) const {
-  float deg_rad = rotation_pos * (M_PI / 2);
+void Block::draw(const Engine& engine, const Coord& rel_pos, const std::string& style, const int& block_size, const bool& shadow, const bool& animations) const {
+  float deg_rad = 0;
+  if (animations) { deg_rad = rotation_pos * (M_PI / 2); }
+  else { deg_rad = rotation * (M_PI / 2); }
+
   float deg = (deg_rad / M_PI) * 180;
 
   std::vector<Rect> shadows;
@@ -145,7 +148,11 @@ void Block::draw(const Engine& engine, const Coord& rel_pos, const std::string& 
     rotated.x = cos(deg_rad) * p.x - sin(deg_rad) * p.y;
     rotated.y = sin(deg_rad) * p.x + cos(deg_rad) * p.y;
     if ((int(deg) % 90) != 0) { rotated *= 0.96; }
-    Coord draw_pos = rel_pos + (animation_pos + rotated) * float(block_size);
+    
+    Coord draw_pos;
+    if (animations) { draw_pos = rel_pos + (animation_pos + rotated) * float(block_size); }
+    else { draw_pos = rel_pos + (pos + rotated) * float(block_size); }
+
 
     Rect draw_rect(draw_pos.x, draw_pos.y, block_size, block_size);
     cubes.push_back(draw_rect);

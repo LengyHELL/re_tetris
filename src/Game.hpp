@@ -7,6 +7,7 @@
 #include "Block.hpp"
 #include "Board.hpp"
 #include "Animation.hpp"
+#include "Config.hpp"
 
 /*
   800 ms initial
@@ -65,8 +66,8 @@ public:
 
   Game(const Engine& engine);
 
-  void update(const Engine& engine);
-  void draw(const Engine& engine) const;
+  void update(const Engine& engine, const Config& cfg);
+  void draw(const Engine& engine, const Config& cfg) const;
 
   bool is_over() const { return over; }
   int get_score() const { return score; }

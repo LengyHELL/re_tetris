@@ -45,7 +45,7 @@ Game::Game(const Engine& engine) {
     //Coord((engine.get_width() / 4) * 3, (engine.get_height() / 4))
   }
 
-void Game::update(const Engine& engine) {
+void Game::update(const Engine& engine, const Config& cfg) {
     if (!over) {
       x_movement = Coord(0, 0);
       y_movement = Coord(0, 0);
@@ -124,7 +124,7 @@ void Game::update(const Engine& engine) {
           over = true;
         }
         else {
-          int clear = board.update_rows(engine, animations, style, block_size);
+          int clear = board.update_rows(engine, animations, style, block_size, cfg.animations);
           switch(clear) {
             case 1: score += 40 * level; break;
             case 2: score += 100 * level; break;
@@ -157,14 +157,14 @@ void Game::update(const Engine& engine) {
     }
   }
 
-void Game::draw(const Engine& engine) const {
+void Game::draw(const Engine& engine, const Config& cfg) const {
     engine.draw_image("img/blank.png", Rect(0, 0, engine.get_width(), engine.get_height()));
     middle.draw(engine);
     next.draw(engine);
 
     board.draw(engine, style, block_size);
-    active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * block_size, style, block_size);
-    next_block.draw(engine, next_pos, style, block_size, false);
+    active_block.draw(engine, board.get_pos() - Coord(0, board.get_hidden()) * block_size, style, block_size, cfg.shadow, cfg.animations);
+    next_block.draw(engine, next_pos, style, block_size, false, false);
     bottom.draw(engine);
 
     for (auto& a : animations) { a.draw(engine); }
