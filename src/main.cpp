@@ -38,12 +38,7 @@ int main(int argc, char** argv) {
   bool exit = false;
 
   // Creating game objects
-  //...
-
-  // Test
-  //...
   Game game(engine);
-  // End Test
 
   while(!engine.get_exit() && !exit) {
     engine.update_inputs();
