@@ -27,7 +27,7 @@ class Game {
   Coord next_pos = Coord(0, 0);
   Rect next_rect = Rect(0, 0, 0, 0);
 
-  float block_size = 20;
+  Coord block_size = Coord(20, 20);
   std::string style = "img/no_part.png";
 
   float step = 800; //ms

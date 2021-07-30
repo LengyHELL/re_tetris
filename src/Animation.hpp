@@ -14,7 +14,7 @@ public:
 class BreakAnimation : public Animation {
   std::string image = "img/no_part.png";
   Coord pos = Coord(400, 300);
-  float block_size = 40;
+  Coord block_size = Coord(20, 20);
   bool over = false;
 
   int res = 5;
@@ -23,11 +23,11 @@ class BreakAnimation : public Animation {
   std::vector<Rect> dst_parts;
   std::vector<Coord> forces;
 
-  Coord scale = Coord(block_size, block_size) / 20;
+  Coord scale = block_size / 20;
   SDL_Color color = {255, 255, 255, 0};
 
 public:
-  BreakAnimation(const Engine& engine, const std::string& image, const Coord& pos, const float& block_size, const SDL_Color& color);
+  BreakAnimation(const Engine& engine, const std::string& image, const Coord& pos, const Coord& block_size, const SDL_Color& color);
 
   void update(const Engine& engine);
   void draw (const Engine& engine) const;

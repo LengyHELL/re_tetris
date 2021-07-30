@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-Coord get_next_pos(const Block& block, const Rect& rect, const float& block_size) {
+Coord get_next_pos(const Block& block, const Rect& rect, const Coord& block_size) {
   Coord min(0, 0);
   Coord max(0, 0);
   bool first = true;
@@ -26,19 +26,20 @@ Coord get_next_pos(const Block& block, const Rect& rect, const float& block_size
 Game::Game(const Engine& engine) {
     board = Board(Coord(0, engine.get_height() / 10));
     active_block.set_pos(Coord(4, 1));
-    block_size = (engine.get_width() / 2) / 10;
+    block_size = Coord((engine.get_width() / 2) / 10, (engine.get_height() - (engine.get_height() / 5)) / 20);
+    std::cerr << block_size << std::endl;
 
     //initializing hud
     top = Frame("img/basic_style.png", Rect(0, 0, engine.get_width(), engine.get_height() / 10));
     bottom = Frame("img/basic_style.png", Rect(0, engine.get_height() - (engine.get_height() / 10), engine.get_width(), engine.get_height() / 10));
     middle = Frame("img/basic_style.png", Rect(engine.get_width() / 2, engine.get_height() / 10, engine.get_width() / 2, engine.get_height() - (engine.get_height() / 5)));
-    info = TextBox("img/basic_style.png", Rect(210, 250, 180, 100), info_text, 16, {0, 0, 0, 0});
+    info = TextBox("img/basic_style.png", Rect((engine.get_width() / 2) + (block_size.x / 2), engine.get_height() / 2, (engine.get_width() / 2) - block_size.x, engine.get_height() / 5), info_text, 16, {0, 0, 0, 0});
     info.update(engine);
 
-    next_rect.x = ((engine.get_width() / 4) * 3) - ((5 * block_size) / 2);
-    next_rect.y = ((engine.get_height() / 6) * 2) - ((5 * block_size) / 2);
-    next_rect.w = block_size * 5;
-    next_rect.h = block_size * 5;
+    next_rect.x = ((engine.get_width() / 4) * 3) - ((5 * block_size.x) / 2);
+    next_rect.y = ((engine.get_height() / 6) * 2) - ((5 * block_size.y) / 2);
+    next_rect.w = block_size.x * 5;
+    next_rect.h = block_size.y * 5;
     next = Frame("img/basic_style.png", next_rect);
 
     next_pos = get_next_pos(next_block, next_rect, block_size);
@@ -171,6 +172,6 @@ void Game::draw(const Engine& engine, const Config& cfg) const {
 
     top.draw(engine);
     info.draw(engine);
-    engine.draw_text("Score: " + std::to_string(get_score()), Coord(210, 60), {0, 0, 0, 0}, 16);
-    engine.draw_text("Level: " + std::to_string(get_level()), Coord(210, 80), {0, 0, 0, 0}, 16);
+    engine.draw_text("Score: " + std::to_string(get_score()), Coord(engine.get_width() / 2 + (block_size.x / 2), (engine.get_height() / 10) + (block_size.y / 2)), {0, 0, 0, 0}, 16);
+    engine.draw_text("Level: " + std::to_string(get_level()), Coord(engine.get_width() / 2 + (block_size.x / 2), (engine.get_height() / 10) + (block_size.y / 2) + 20), {0, 0, 0, 0}, 16);
   }

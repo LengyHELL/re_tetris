@@ -1,6 +1,6 @@
 #include "Animation.hpp"
 
-BreakAnimation::BreakAnimation(const Engine& engine, const std::string& image, const Coord& pos, const float& block_size, const SDL_Color& color)
+BreakAnimation::BreakAnimation(const Engine& engine, const std::string& image, const Coord& pos, const Coord& block_size, const SDL_Color& color)
 : image(image), pos(pos), block_size(block_size), color(color) {
 
   float x = float((rand() % (res - 1)) + 1) / res;
@@ -11,10 +11,10 @@ BreakAnimation::BreakAnimation(const Engine& engine, const std::string& image, c
   src_parts.push_back(Rect(0, size.h * y, size.w * x, size.h * (1 - y)));
   src_parts.push_back(Rect(size.w * x, size.h * y, size.w * (1 - x), size.h * (1 - y)));
 
-  dst_parts.push_back(Rect(pos.x, pos.y, block_size * x, block_size * y));
-  dst_parts.push_back(Rect(pos.x + block_size * x, pos.y, block_size * (1 - x), block_size * y));
-  dst_parts.push_back(Rect(pos.x, pos.y + block_size * y, block_size * x, block_size * (1 - y)));
-  dst_parts.push_back(Rect(pos.x + block_size * x, pos.y + block_size * y, block_size * (1 - x), block_size * (1 - y)));
+  dst_parts.push_back(Rect(pos.x, pos.y, block_size.x * x, block_size.y * y));
+  dst_parts.push_back(Rect(pos.x + block_size.x * x, pos.y, block_size.x * (1 - x), block_size.y * y));
+  dst_parts.push_back(Rect(pos.x, pos.y + block_size.y * y, block_size.x * x, block_size.y * (1 - y)));
+  dst_parts.push_back(Rect(pos.x + block_size.x * x, pos.y + block_size.y * y, block_size.x * (1 - x), block_size.y * (1 - y)));
 
   for (int i = 0; i < 4; i++) {
     x = 0.05 + float((rand() % 10) + 1) / 100;

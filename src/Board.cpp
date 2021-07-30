@@ -19,7 +19,7 @@ bool Board::check_block(const Block& block) const {
   return true;
 }
 
-int Board::update_rows(const Engine& engine, std::vector<BreakAnimation>& animations, const std::string& style, const float& block_size, const bool& get_animations) {
+int Board::update_rows(const Engine& engine, std::vector<BreakAnimation>& animations, const std::string& style, const Coord& block_size, const bool& get_animations) {
   int ret = 0;
 
   for (int j = 0; j < height; j++) {
@@ -31,7 +31,7 @@ int Board::update_rows(const Engine& engine, std::vector<BreakAnimation>& animat
       ret += 1;
       for (int i = 0; i < width; i++) {
         if (get_animations) {
-          animations.push_back(BreakAnimation(engine, style, Coord(pos.x + (i * block_size), pos.y + ((j - hidden) * block_size)), block_size, color_matrix[i][j]));
+          animations.push_back(BreakAnimation(engine, style, Coord(pos.x + (i * block_size.x), pos.y + ((j - hidden) * block_size.y)), block_size, color_matrix[i][j]));
         }
         matrix[i].erase(matrix[i].begin() + j);
         color_matrix[i].erase(color_matrix[i].begin() + j);
@@ -60,11 +60,11 @@ void Board::set_block(const Block& block) {
   }
 }
 
-void Board::draw(const Engine& engine, const std::string& style, const float& block_size) const {
+void Board::draw(const Engine& engine, const std::string& style, const Coord& block_size) const {
 
   for (unsigned i = 0; i < matrix.size(); i++) {
     for (unsigned j = 0; j < matrix[0].size() - hidden; j++) {
-      Rect draw_rect(pos.x + (i * block_size), pos.y + (j * block_size), block_size, block_size);
+      Rect draw_rect(pos.x + (i * block_size.x), pos.y + (j * block_size.y), block_size.x, block_size.y);
       engine.draw_image(style, draw_rect, 0, color_matrix[i][j + hidden]);
     }
   }

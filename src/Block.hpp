@@ -27,7 +27,7 @@ public:
   void rotate();
   void move(const Coord& dir);
   void update(const Engine& engine, const float& duration);
-  void draw(const Engine& engine, const Coord& rel_pos, const std::string& style, const int& block_size, const bool& shadow = true, const bool& animations = true) const;
+  void draw(const Engine& engine, const Coord& rel_pos, const std::string& style, const Coord& block_size, const bool& shadow = true, const bool& animations = true) const;
 
   Coord get_pos() const;
   std::vector<Coord> get_parts() const;

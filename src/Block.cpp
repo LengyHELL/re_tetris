@@ -134,7 +134,7 @@ void Block::update(const Engine& engine, const float& duration) {
   }
 }
 
-void Block::draw(const Engine& engine, const Coord& rel_pos, const std::string& style, const int& block_size, const bool& shadow, const bool& animations) const {
+void Block::draw(const Engine& engine, const Coord& rel_pos, const std::string& style, const Coord& block_size, const bool& shadow, const bool& animations) const {
   float deg_rad = 0;
   if (animations) { deg_rad = rotation_pos * (M_PI / 2); }
   else { deg_rad = rotation * (M_PI / 2); }
@@ -148,17 +148,17 @@ void Block::draw(const Engine& engine, const Coord& rel_pos, const std::string& 
     rotated.x = cos(deg_rad) * p.x - sin(deg_rad) * p.y;
     rotated.y = sin(deg_rad) * p.x + cos(deg_rad) * p.y;
     if ((int(deg) % 90) != 0) { rotated *= 0.96; }
-    
+
     Coord draw_pos;
-    if (animations) { draw_pos = rel_pos + (animation_pos + rotated) * float(block_size); }
-    else { draw_pos = rel_pos + (pos + rotated) * float(block_size); }
+    if (animations) { draw_pos = rel_pos + (animation_pos + rotated) * block_size; }
+    else { draw_pos = rel_pos + (pos + rotated) * block_size; }
 
 
-    Rect draw_rect(draw_pos.x, draw_pos.y, block_size, block_size);
+    Rect draw_rect(draw_pos.x, draw_pos.y, block_size.x, block_size.y);
     cubes.push_back(draw_rect);
 
     if (shadow) {
-      Rect shadow_rect(draw_pos.x, draw_pos.y + (block_size / 2), block_size, engine.get_height() - draw_pos.y);
+      Rect shadow_rect(draw_pos.x, draw_pos.y + (block_size.y / 2), block_size.x, engine.get_height() - draw_pos.y);
       insert_shadow(shadow_rect, shadows);
     }
   }

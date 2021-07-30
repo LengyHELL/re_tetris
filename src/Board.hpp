@@ -23,8 +23,8 @@ public:
   Board(const Coord& pos);
 
   bool check_block(const Block& block) const;
-  int update_rows(const Engine& engine, std::vector<BreakAnimation>& animations, const std::string& style, const float& block_size, const bool& get_animations);
-  void draw(const Engine& engine, const std::string& style, const float& block_size) const;
+  int update_rows(const Engine& engine, std::vector<BreakAnimation>& animations, const std::string& style, const Coord& block_size, const bool& get_animations);
+  void draw(const Engine& engine, const std::string& style, const Coord& block_size) const;
 
   bool is_over() const;
   Coord get_pos() const { return pos; }
